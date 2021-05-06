@@ -6,6 +6,10 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ["admin", "moderator"], required: true },
 });
 
+UserSchema.static("findByUsername", function (username) {
+  return this.findOne({ username });
+});
+
 const User = mongoose.model("User", UserSchema, "users");
 
 module.exports = { User, UserSchema };
