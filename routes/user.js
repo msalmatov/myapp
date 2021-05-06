@@ -19,7 +19,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const result = await createUserSchema.validateAsync(req.body);
+    const { error, value } = createUserSchema.validate(req.body);
+    if (error) {
+      throw UserErrors.UserValidationFailed();
+    }
 
     const User = mongoose.model("User");
 

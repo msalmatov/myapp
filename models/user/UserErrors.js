@@ -12,6 +12,10 @@ class UserErrors extends GeneralErrors {
   static UserAlreadyExists(data = null) {
     return new GeneralErrors(56003, "User already exists", data);
   }
+
+  static UserValidationFailed(data = null) {
+    return new GeneralErrors(56004, "User validation failed", data);
+  }
 }
 
 module.exports = UserErrors;
