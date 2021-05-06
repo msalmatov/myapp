@@ -41,4 +41,24 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/:userId", async (req, res) => {
+  try {
+    const User = mongoose.model("User");
+    const user = await User.findById(req.params.userId);
+    res.json(user);
+  } catch (error) {
+    res.json({ error });
+  }
+});
+
+router.delete("/:userId", async (req, res) => {
+  try {
+    const User = mongoose.model("User");
+    const user = await User.remove({ _id: req.params.userId });
+    res.json(user);
+  } catch (error) {
+    res.json({ error });
+  }
+});
+
 module.exports = router;
