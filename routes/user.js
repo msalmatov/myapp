@@ -6,8 +6,14 @@ const Password = require("../modules/Password");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("get user list");
+router.get("/", async (req, res) => {
+  try {
+    const User = mongoose.model("User");
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    res.json({ error });
+  }
 });
 
 router.post("/", async (req, res) => {
