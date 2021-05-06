@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const UserErrors = require("../models/user/UserErrors");
 const Password = require("../modules/Password");
+const { createUserSchema } = require("../helpers/validators/user");
 
 const router = express.Router();
 
@@ -18,6 +19,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    const result = await createUserSchema.validateAsync(req.body);
+
     const User = mongoose.model("User");
 
     const found = await User.findByUsername(req.body.username);
