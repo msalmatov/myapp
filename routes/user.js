@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
-const UserErrors = require("../models/user/UserErrors");
+const UserError = require("../models/user/UserError");
 const Password = require("../modules/Password");
 const { createUserSchema } = require("../helpers/validators/user");
 
@@ -11,6 +11,9 @@ router.get("/", async (req, res) => {
   try {
     const User = mongoose.model("User");
     const users = await User.find();
+    if (!users) {
+      throw UserError.UserNotFound();
+    }
     res.json(users);
   } catch (error) {
     res.json({ error });
@@ -19,16 +22,16 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { error, value } = createUserSchema.validate(req.body);
+    const { error } = createUserSchema.validate(req.body);
     if (error) {
-      throw UserErrors.UserValidationFailed();
+      throw UserError.UserValidationFailed();
     }
 
     const User = mongoose.model("User");
 
     const found = await User.findByUsername(req.body.username);
     if (found) {
-      throw UserErrors.UserAlreadyExists();
+      throw UserError.UserAlreadyExists();
     }
 
     const pass = await Password.hash(req.body.password);
@@ -51,6 +54,9 @@ router.get("/:userId", async (req, res) => {
   try {
     const User = mongoose.model("User");
     const user = await User.findById(req.params.userId);
+    if (!user) {
+      throw UserError.UserNotFound();
+    }
     res.json(user);
   } catch (error) {
     res.json({ error });
